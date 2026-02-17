@@ -57,13 +57,19 @@ class TodoService {
 	/** Create a new tiered section */
 	async addTodo(heading: string): Promise<string> {
 		if (!db) throw new Error("Firestore not available");
+
+		// get the last position
+		const lastPosition = this.todos.length > 0 ? this.todos[this.todos.length - 1].position ?? 0 : 0;
+		const newPosition = lastPosition + 1;
+
 		const ref = await addDoc(collection(db, "todos"), {
 			heading,
+			position: newPosition,
 			tasks: [],
 		});
 		// Optimistic update so the Section dropdown has the new option immediately
 		// (avoids select value resetting when Firestore onSnapshot hasn't fired yet)
-		this.todos = [...this.todos, { id: ref.id, heading, tasks: [] } as TodoWithId];
+		this.todos = [...this.todos, { id: ref.id, heading, position: newPosition, tasks: [] } as TodoWithId];
 		return ref.id;
 	}
 
