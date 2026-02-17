@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { longpress } from '$/lib/actions/longpress';
+	import { longpress } from '$lib/actions/longpress';
  	import { todoService } from '$lib/todoService.svelte';
 
 	/**
