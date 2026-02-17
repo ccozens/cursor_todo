@@ -1,6 +1,6 @@
 <script lang="ts">
- import { longpress } from '$lib/actions/longpress';
- import { todoService } from '$lib/todoService.svelte';
+	import { longpress } from '$/lib/actions/longpress';
+ 	import { todoService } from '$lib/todoService.svelte';
 
 	/**
 	 * Reusable Tiered Todo List Component
@@ -86,12 +86,20 @@
 		}
 	}
 
+	// confirm delete section
 	function handleLongPress(todoId: string, heading: string) {
         const proceed = confirm(`Delete section "${heading}" and all its tasks?`);
         if (proceed) {
             todoService.deleteTodo(todoId);
         }
+    };
+
+	// confirm delete task
+	async function handleTaskLongPress(todoId: string, taskIndex: number, taskText: string) {
+    if (confirm(`Delete task: "${taskText}"?`)) {
+        await todoService.deleteTask(todoId, taskIndex);
     }
+}
 
 	// Shared button styles
 	const buttonStyle =
