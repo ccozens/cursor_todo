@@ -41,32 +41,6 @@
   }
 </script>
 
-<div class="m-4 flex flex-wrap gap-2 items-center">
-  <span class="text-slate-300 font-medium">Day:</span>
-  <div class="flex flex-wrap gap-1">
-    <button
-      type="button"
-      class="px-3 py-1.5 rounded-lg text-sm font-medium transition {selectedDay === 'All'
-        ? 'bg-indigo-600 text-white'
-        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}"
-      onclick={() => (selectedDay = 'All')}
-    >
-      All
-    </button>
-    {#each DAYS as day}
-      <button
-        type="button"
-        class="px-3 py-1.5 rounded-lg text-sm font-medium transition {selectedDay === day
-          ? 'bg-indigo-600 text-white'
-          : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}"
-        onclick={() => (selectedDay = day)}
-      >
-        {day}
-      </button>
-    {/each}
-  </div>
-</div>
-
 <TieredTodoList
   items={todoService.todos}
   selectedDay={selectedDay}
