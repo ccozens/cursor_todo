@@ -34,14 +34,16 @@ class TodoService {
 				this.todos = snapshot.docs.map((d) => {
 					const data = d.data();
 					const rawTasks = Array.isArray(data.tasks) ? data.tasks : [];
-					const tasks = rawTasks.map((t: Record<string, unknown>) => ({
-						text: t.text ?? "",
-						done: !!t.done,
-						id: t.id,
+					const tasks: Task[] = rawTasks.map((t: any) => ({
+						text: String(t.text ?? ""),
+						done: Boolean(t.done),
+						id: typeof t.id === 'number' ? t.id : undefined,
+						position: typeof t.position === 'number' ? t.position : 0,
 						days: Array.isArray(t.days) ? (t.days as string[]) : undefined,
 					}));
 					return {
 						id: d.id,
+						position: typeof data.position === 'number' ? data.position : 0,
 						heading: data.heading ?? "",
 						tasks,
 					} as TodoWithId;

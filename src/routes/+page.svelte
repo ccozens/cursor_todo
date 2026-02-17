@@ -39,6 +39,7 @@
     everyDay = true;
     addTaskDays = [];
   }
+
 </script>
 
 <TieredTodoList
@@ -50,6 +51,7 @@
   }}
   onUncheckAll={() => todoService.uncheckAll()}
 />
+
 
 <section class="m-4 p-4 bg-slate-800 rounded-xl border border-slate-600 max-w-md">
   <h2 class="text-lg font-semibold text-slate-200 mb-3">Add Task</h2>
@@ -123,6 +125,3 @@
     </button>
   </form>
 </section>
-
-<h1 class="m-4">Welcome to SvelteKit</h1>
-<p class="m-4">Visit <a href="https://svelte.dev/docs/kit" class="text-indigo-400 hover:underline">svelte.dev/docs/kit</a> to read the documentation</p>
