@@ -102,13 +102,35 @@
 }
 
 	// Shared button styles
-	const buttonStyle =
-		'bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 p-3 rounded-lg text-current';
-	const buttonActive =
+const buttonStyle =
+    'bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 px-3 py-1.5 rounded-md text-sm font-medium text-current shadow-sm';	const buttonActive =
 		'transition duration-600 active:ring-2 active:ring-offset-2 active:ring-pink-700';
 	const buttonFocus =
 		'transition duration-300 focus:ring-2 focus:ring-offset-2 focus:ring-pink-700';
 </script>
+
+{#if showFilterBar}
+	<div class="m-4 flex flex-row items-center justify-center gap-2">
+		
+			{#each ['all', 'active', 'completed'] as filterOption}
+				<button
+					type="button"
+					class="{buttonStyle} {buttonFocus} capitalize flex-1 whitespace-nowrap"
+					onclick={() => setFilter(filterOption as Filters)}
+				>
+					{filterOption}
+				</button>
+			{/each}
+
+		<button
+			type="button"
+			class="{buttonStyle} {buttonActive} flex-1 whitespace-nowrap"
+			onclick={() => onUncheckAll?.()}
+		>
+			Uncheck all
+		</button>
+	</div>
+{/if}
 
 
 <div class="grid gap-4 m-4 md:grid-cols-2 lg:grid-cols-3">
@@ -143,25 +165,4 @@
 	{/each}
 </div>
 
-{#if showFilterBar}
-	<div class="m-4 flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between">
-		<div class="flex gap-2 flex-wrap">
-			{#each ['all', 'active', 'completed'] as filterOption}
-				<button
-					type="button"
-					class="{buttonStyle} {buttonFocus} capitalize flex-1 sm:flex-none min-w-0"
-					onclick={() => setFilter(filterOption as Filters)}
-				>
-					{filterOption}
-				</button>
-			{/each}
-		</div>
-		<button
-			type="button"
-			class="{buttonStyle} {buttonActive} w-full sm:w-auto"
-			onclick={() => onUncheckAll?.()}
-		>
-			Uncheck all
-		</button>
-	</div>
-{/if}
+
