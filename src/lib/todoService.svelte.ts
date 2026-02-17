@@ -4,6 +4,7 @@ import {
 	onSnapshot,
 	addDoc,
 	updateDoc,
+	deleteDoc,
 	doc,
 	type Unsubscribe,
 } from "firebase/firestore";
@@ -88,6 +89,16 @@ class TodoService {
 		};
 		const newTasks = [...todo.tasks, newTask];
 		await updateDoc(doc(db, "todos", todoId), { tasks: tasksForFirestore(newTasks) });
+	}
+
+	/** Delete a task */
+	async deleteTodo(todoId: string): Promise<void> {
+		if (!db) throw new Error("Firestore not available");
+		
+		// Optional: Optimistic update
+		this.todos = this.todos.filter(t => t.id !== todoId);
+		
+		await deleteDoc(doc(db, "todos", todoId));
 	}
 
 	/** Toggle a task's done state */

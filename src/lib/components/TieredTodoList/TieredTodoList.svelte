@@ -1,4 +1,7 @@
 <script lang="ts">
+ import { longpress } from '$lib/actions/longpress';
+ import { todoService } from '$lib/todoService.svelte';
+
 	/**
 	 * Reusable Tiered Todo List Component
 	 *
@@ -83,6 +86,13 @@
 		}
 	}
 
+	function handleLongPress(todoId: string, heading: string) {
+        const proceed = confirm(`Delete section "${heading}" and all its tasks?`);
+        if (proceed) {
+            todoService.deleteTodo(todoId);
+        }
+    }
+
 	// Shared button styles
 	const buttonStyle =
 		'bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 p-3 rounded-lg text-current';
@@ -100,21 +110,25 @@
 			data-todo-index={todoIndex}
 		>
 			{#if showHeading}
-				<h2 class="text-xl sm:text-2xl md:text-3xl text-center my-3 px-4">{todo.heading}</h2>
+				<h2 use:longpress={600}
+					onlongpress={() => handleLongPress(todo.id, todo.heading)}
+					class="text-xl sm:text-2xl md:text-3xl text-center my-3 px-4">{todo.heading}</h2>
 			{/if}
 			<div class="w-full flex flex-col items-center pb-3">
 				{#each todo.tasksWithIndex as { task, originalIndex }}
 					<button
-						type="button"
-						onclick={toggleTodo}
-						data-todo-index={todoIndex}
-						data-task-index={originalIndex}
-						class={task.done
-							? 'w-11/12 p-2 mb-1 rounded-sm transition duration-300 opacity-10 bg-slate-700 text-left'
-							: 'w-11/12 p-2 mb-1 rounded-sm bg-slate-700 opacity-90 text-left hover:opacity-100 transition duration-300'}
-					>
-						{task.text}
-					</button>
+    type="button"
+    use:longpress={600} 
+    onlongpress={() => handleTaskLongPress(todo.id, originalIndex, task.text)}
+    onclick={toggleTodo}
+    data-todo-index={todoIndex}
+    data-task-index={originalIndex}
+    class="select-none {task.done
+        ? 'w-11/12 p-2 mb-1 rounded-sm transition duration-300 opacity-10 bg-slate-700 text-left'
+        : 'w-11/12 p-2 mb-1 rounded-sm bg-slate-700 opacity-90 text-left hover:opacity-100 transition duration-300'}"
+>
+    {task.text}
+</button>
 				{/each}
 			</div>
 		</div>
