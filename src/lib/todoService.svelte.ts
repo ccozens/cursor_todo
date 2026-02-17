@@ -48,6 +48,8 @@ class TodoService {
 						tasks,
 					} as TodoWithId;
 				});
+				// sort the todos by position
+				this.todos.sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
 			});
 		}
 	}

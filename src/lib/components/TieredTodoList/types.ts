@@ -19,6 +19,7 @@ export type Task = {
 export type Todo = {
 	heading: string;
 	tasks: Task[];
+	position?: number;
 };
 
 export type Filters = 'all' | 'active' | 'completed';
