@@ -95,7 +95,6 @@
 
 <div class="grid gap-4 m-4 md:grid-cols-2 lg:grid-cols-3">
 	{#each filteredItems as todo, todoIndex}
-	{@debug todo}
 		<div
 			class="flex flex-col items-center bg-slate-900 border-2 border-slate-600 rounded-lg overflow-hidden"
 			data-todo-index={todoIndex}
