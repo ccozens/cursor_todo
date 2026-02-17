@@ -92,7 +92,28 @@ class TodoService {
 	}
 
 	/** Delete a task */
-	async deleteTodo(todoId: string): Promise<void> {
+	async deleteTask(todoId: string, taskIndex: number): Promise<void> {
+        if (!db) throw new Error("Firestore not available");
+        
+        // Find the todo in your current $state
+        const todo = this.todos.find((t) => t.id === todoId);
+        if (!todo) return;
+
+        // Create a new array, skipping the item at the original index
+        const updatedTasks = todo.tasks.filter((_, i) => i !== taskIndex);
+
+        try {
+            // Update Firestore with the new array (minus the deleted task)
+            await updateDoc(doc(db, "todos", todoId), {
+                tasks: tasksForFirestore(updatedTasks)
+            });
+        } catch (error) {
+            console.error("Failed to delete task:", error);
+        }
+    }
+
+	/** Delete a section */
+	async deleteSection(todoId: string): Promise<void> {
 		if (!db) throw new Error("Firestore not available");
 		
 		// Optional: Optimistic update
