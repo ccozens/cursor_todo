@@ -33,7 +33,7 @@
     let filteredItems = $derived(applyFilters(items, selectedDay, filter));
 
     // Handlers
-    const toggleTodo = createToggleHandler(onToggle);
+    const toggleTodo = $derived(createToggleHandler(onToggle));
     const handleSectionDelete = createSectionDeleteHandler();
     const handleTaskDelete = createTaskDeleteHandler();
 </script>
