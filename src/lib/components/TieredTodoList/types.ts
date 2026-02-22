@@ -17,6 +17,7 @@ export type Task = {
 
 
 export type Todo = {
+	id: string;
 	heading: string;
 	tasks: Task[];
 	position?: number;
