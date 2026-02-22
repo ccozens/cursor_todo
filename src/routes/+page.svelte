@@ -2,9 +2,7 @@
   import { todoService } from '$lib/todoService.svelte';
   import { TieredTodoList } from '$lib/components/TieredTodoList';
 
-  import { browser } from '$app/environment';
-import { goto } from '$app/navigation';
-
+  
 
   const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
   let selectedDay = $state<string>('All');
@@ -56,7 +54,6 @@ import { goto } from '$app/navigation';
     }}
     onUncheckAll={() => todoService.uncheckAll()}
   />
-{/if}
 
 <!-- Add Task Form -->
 <section class="m-4 p-4 bg-slate-800 rounded-xl border border-slate-600 max-w-md">
@@ -131,3 +128,5 @@ import { goto } from '$app/navigation';
     </button>
   </form>
 </section>
+
+{/if}
