@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { longpress } from '$lib/actions/longpress';
  	import { todoService } from '$lib/todoService.svelte';
+	import dayjs from 'dayjs';
 
 	/**
 	 * Reusable Tiered Todo List Component
@@ -37,12 +38,14 @@
 		items,
 		onToggle,
 		onUncheckAll,
-		selectedDay = 'All',
+		selectedDay = dayjs().format('ddd'),
 		showHeading = true,
 		showFilterBar = true
 	}: Props = $props();
 
 	let filter = $state<Filters>('all');
+
+	
 
 	/** Filter tasks by selected day; each entry keeps originalIndex for onToggle */
 	type TaskWithIndex = { task: Task; originalIndex: number };
@@ -90,7 +93,7 @@
 	function handleLongPress(todoId: string, heading: string) {
         const proceed = confirm(`Delete section "${heading}" and all its tasks?`);
         if (proceed) {
-            todoService.deleteTodo(todoId);
+            todoService.deleteSection(todoId);
         }
     };
 
