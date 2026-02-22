@@ -8,8 +8,8 @@ import {
 	doc,
 	type Unsubscribe,
 } from "firebase/firestore";
-import { db } from "./firebase";
-import type { Todo, Task } from "./types";
+import { db } from "$lib/firebase";
+import type { Todo, Task } from "$lib/types";
 import { browser } from "$app/environment";
 
 /** Todo with Firestore document id */
@@ -27,6 +27,7 @@ function tasksForFirestore(tasks: Task[]): Record<string, unknown>[] {
 
 class TodoService {
 	todos = $state<TodoWithId[]>([]);
+	loading = $state(true);
 	#unsubscribe: Unsubscribe | null = null;
 
 	constructor() {
@@ -51,6 +52,9 @@ class TodoService {
 				});
 				// sort the todos by position
 				this.todos.sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+				
+				// Set loading to false after first snapshot
+				this.loading = false;
 			});
 		}
 	}
@@ -69,7 +73,6 @@ class TodoService {
 			tasks: [],
 		});
 		// Optimistic update so the Section dropdown has the new option immediately
-		// (avoids select value resetting when Firestore onSnapshot hasn't fired yet)
 		this.todos = [...this.todos, { id: ref.id, heading, position: newPosition, tasks: [] } as TodoWithId];
 		return ref.id;
 	}
@@ -93,30 +96,27 @@ class TodoService {
 
 	/** Delete a task */
 	async deleteTask(todoId: string, taskIndex: number): Promise<void> {
-        if (!db) throw new Error("Firestore not available");
-        
-        // Find the todo in your current $state
-        const todo = this.todos.find((t) => t.id === todoId);
-        if (!todo) return;
+		if (!db) throw new Error("Firestore not available");
+		
+		const todo = this.todos.find((t) => t.id === todoId);
+		if (!todo) return;
 
-        // Create a new array, skipping the item at the original index
-        const updatedTasks = todo.tasks.filter((_, i) => i !== taskIndex);
+		const updatedTasks = todo.tasks.filter((_, i) => i !== taskIndex);
 
-        try {
-            // Update Firestore with the new array (minus the deleted task)
-            await updateDoc(doc(db, "todos", todoId), {
-                tasks: tasksForFirestore(updatedTasks)
-            });
-        } catch (error) {
-            console.error("Failed to delete task:", error);
-        }
-    }
+		try {
+			await updateDoc(doc(db, "todos", todoId), {
+				tasks: tasksForFirestore(updatedTasks)
+			});
+		} catch (error) {
+			console.error("Failed to delete task:", error);
+		}
+	}
 
 	/** Delete a section */
 	async deleteSection(todoId: string): Promise<void> {
 		if (!db) throw new Error("Firestore not available");
 		
-		// Optional: Optimistic update
+		// Optimistic update
 		this.todos = this.todos.filter(t => t.id !== todoId);
 		
 		await deleteDoc(doc(db, "todos", todoId));

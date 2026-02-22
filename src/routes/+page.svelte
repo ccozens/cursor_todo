@@ -2,12 +2,14 @@
   import { todoService } from '$lib/todoService.svelte';
   import { TieredTodoList } from '$lib/components/TieredTodoList';
 
+  import { browser } from '$app/environment';
+import { goto } from '$app/navigation';
+
+
   const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
   let selectedDay = $state<string>('All');
 
-  /** Day filtering is done inside TieredTodoList via $derived (tasks where task.days includes selectedDay, or all if 'All') */
-
-  // Add Task form
+  // Add Task form state
   const NEW_SECTION_VALUE = '__new__';
   let addTaskSectionId = $state<string>('');
   let addTaskNewHeading = $state('');
@@ -39,20 +41,24 @@
     everyDay = true;
     addTaskDays = [];
   }
-
 </script>
 
-<TieredTodoList
-  items={todoService.todos}
-  selectedDay={selectedDay}
-  onToggle={(todoIndex, taskIndex) => {
-    const todo = todoService.todos[todoIndex];
-    if (todo) todoService.toggleTask(todo.id, taskIndex);
-  }}
-  onUncheckAll={() => todoService.uncheckAll()}
-/>
+<!-- Loading state -->
+{#if todoService.loading && todoService.todos.length === 0}
+  <div class="m-4 p-4 text-center text-slate-400">Loading your todos...</div>
+{:else}
+  <TieredTodoList
+    items={todoService.todos}
+    selectedDay={selectedDay}
+    onToggle={(todoIndex, taskIndex) => {
+      const todo = todoService.todos[todoIndex];
+      if (todo) todoService.toggleTask(todo.id, taskIndex);
+    }}
+    onUncheckAll={() => todoService.uncheckAll()}
+  />
+{/if}
 
-
+<!-- Add Task Form -->
 <section class="m-4 p-4 bg-slate-800 rounded-xl border border-slate-600 max-w-md">
   <h2 class="text-lg font-semibold text-slate-200 mb-3">Add Task</h2>
   <form
