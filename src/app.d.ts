@@ -10,4 +10,10 @@ declare global {
 	}
 }
 
+declare namespace svelteHTML {
+	interface HTMLAttributes<T> {
+		'onlongpress'?: (event: CustomEvent) => void;
+	}
+}
+
 export {};

@@ -9,7 +9,7 @@ import {
 	type Unsubscribe,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import type { Todo, Task } from "./components/TieredTodoList/types";
+import type { Todo, Task } from "./types";
 import { browser } from "$app/environment";
 
 /** Todo with Firestore document id */
