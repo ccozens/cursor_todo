@@ -1,4 +1,4 @@
-export function longpress(node: HTMLElement, duration = 500) {
+export function longpress(node: HTMLElement, duration = 1000) {
     let timer: number;
     let isLongPress = false;
 
