@@ -1,11 +1,17 @@
 <script lang="ts">
   import { todoService } from '$lib/todoService.svelte';
   import { TieredTodoList } from '$lib/components/TieredTodoList';
+	import dayjs from 'dayjs';
 
   
 
   const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
-  let selectedDay = $state<string>('All');
+  const today = dayjs().format('ddd');
+  let selectedDay = $state<string>(today);
+
+    // debug day
+  console.log('Today is:', today);
+  console.log('selectedDay is:', selectedDay);
 
   // Add Task form state
   const NEW_SECTION_VALUE = '__new__';
