@@ -27,11 +27,11 @@ function tasksForFirestore(tasks: Task[]): Record<string, unknown>[] {
 
 class TodoService {
 	todos = $state<TodoWithId[]>([]);
-	loading = $state(true);
 	#unsubscribe: Unsubscribe | null = null;
 
 	constructor() {
 		if (browser && db) {
+			// Load todos immediately - no auth check, no loading state
 			this.#unsubscribe = onSnapshot(collection(db, "todos"), (snapshot) => {
 				this.todos = snapshot.docs.map((d) => {
 					const data = d.data();
@@ -52,9 +52,6 @@ class TodoService {
 				});
 				// sort the todos by position
 				this.todos.sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
-				
-				// Set loading to false after first snapshot
-				this.loading = false;
 			});
 		}
 	}
@@ -62,8 +59,6 @@ class TodoService {
 	/** Create a new tiered section */
 	async addTodo(heading: string): Promise<string> {
 		if (!db) throw new Error("Firestore not available");
-
-		// get the last position
 		const lastPosition = this.todos.length > 0 ? this.todos[this.todos.length - 1].position ?? 0 : 0;
 		const newPosition = lastPosition + 1;
 
@@ -72,7 +67,6 @@ class TodoService {
 			position: newPosition,
 			tasks: [],
 		});
-		// Optimistic update so the Section dropdown has the new option immediately
 		this.todos = [...this.todos, { id: ref.id, heading, position: newPosition, tasks: [] } as TodoWithId];
 		return ref.id;
 	}
@@ -97,12 +91,9 @@ class TodoService {
 	/** Delete a task */
 	async deleteTask(todoId: string, taskIndex: number): Promise<void> {
 		if (!db) throw new Error("Firestore not available");
-		
 		const todo = this.todos.find((t) => t.id === todoId);
 		if (!todo) return;
-
 		const updatedTasks = todo.tasks.filter((_, i) => i !== taskIndex);
-
 		try {
 			await updateDoc(doc(db, "todos", todoId), {
 				tasks: tasksForFirestore(updatedTasks)
@@ -115,10 +106,7 @@ class TodoService {
 	/** Delete a section */
 	async deleteSection(todoId: string): Promise<void> {
 		if (!db) throw new Error("Firestore not available");
-		
-		// Optimistic update
 		this.todos = this.todos.filter(t => t.id !== todoId);
-		
 		await deleteDoc(doc(db, "todos", todoId));
 	}
 

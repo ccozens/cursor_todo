@@ -1,17 +1,11 @@
 <script lang="ts">
   import { todoService } from '$lib/todoService.svelte';
   import { TieredTodoList } from '$lib/components/TieredTodoList';
-	import dayjs from 'dayjs';
-
-  
+  import dayjs from 'dayjs';
 
   const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
   const today = dayjs().format('ddd');
   let selectedDay = $state<string>(today);
-
-    // debug day
-  console.log('Today is:', today);
-  console.log('selectedDay is:', selectedDay);
 
   // Add Task form state
   const NEW_SECTION_VALUE = '__new__';
@@ -47,19 +41,16 @@
   }
 </script>
 
-<!-- Loading state -->
-{#if todoService.loading && todoService.todos.length === 0}
-  <div class="m-4 p-4 text-center text-slate-400">Loading your todos...</div>
-{:else}
-  <TieredTodoList
-    items={todoService.todos}
-    selectedDay={selectedDay}
-    onToggle={(todoIndex, taskIndex) => {
-      const todo = todoService.todos[todoIndex];
-      if (todo) todoService.toggleTask(todo.id, taskIndex);
-    }}
-    onUncheckAll={() => todoService.uncheckAll()}
-  />
+{#if todoService.todos.length > 0}
+<TieredTodoList
+  items={todoService.todos}
+  selectedDay={selectedDay}
+  onToggle={(todoIndex, taskIndex) => {
+    const todo = todoService.todos[todoIndex];
+    if (todo) todoService.toggleTask(todo.id, taskIndex);
+  }}
+  onUncheckAll={() => todoService.uncheckAll()}
+/>
 
 <!-- Add Task Form -->
 <section class="m-4 p-4 bg-slate-800 rounded-xl border border-slate-600 max-w-md">
@@ -134,5 +125,4 @@
     </button>
   </form>
 </section>
-
 {/if}
