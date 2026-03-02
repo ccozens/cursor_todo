@@ -1,12 +1,12 @@
 <script lang="ts">
 	import './layout.css';
-	import favicon from '$lib/assets/favicon.svg';
 	import { auth, loginWithGoogle } from '$lib/firebase';
 	import { onMount } from 'svelte';
+	import type { User } from 'firebase/auth';
 
 	let { children } = $props();
 
-	let user = $state(null);
+	let user = $state<User | null>(null);
 
 	onMount(() => {
 		const unsubscribe = auth.onAuthStateChanged((u) => {
@@ -17,7 +17,7 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+	<link rel="icon" href="/favicon.svg" />
 </svelte:head>
 
 {#if user}
