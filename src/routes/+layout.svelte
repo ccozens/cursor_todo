@@ -7,6 +7,7 @@
 	let { children } = $props();
 
 	let user = $state<User | null>(null);
+	let isInitializing = $state(true); // Track the first load
 
 	onMount(() => {
 		const unsubscribe = auth.onAuthStateChanged((u) => {
@@ -20,9 +21,9 @@
 	<link rel="icon" href="/favicon.svg" />
 </svelte:head>
 
-{#if user}
-	{@render children()}
-{:else}
+{@render children()}
+
+{#if !isInitializing && !user}
 	<div class="flex items-center justify-center min-h-screen bg-slate-950">
 		<div class="bg-slate-900 border-2 border-slate-600 rounded-xl p-8 shadow-2xl max-w-md w-full mx-4">
 			<h1 class="text-4xl font-bold text-center mb-2 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">

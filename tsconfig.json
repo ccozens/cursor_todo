@@ -10,7 +10,10 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"moduleResolution": "bundler"
+		"moduleResolution": "bundler",
+		"target": "esnext",
+		"module": "esnext",
+		"types": ["@sveltejs/kit"],
 	},
 	"include": [
     "src/**/*.d.ts",
