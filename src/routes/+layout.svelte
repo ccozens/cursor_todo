@@ -2,6 +2,7 @@
 	import './layout.css';
 	import { auth, loginWithGoogle } from '$lib/firebase';
 	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import type { User } from 'firebase/auth';
 
 	let { children } = $props();
@@ -12,6 +13,7 @@
 	onMount(() => {
 		const unsubscribe = auth.onAuthStateChanged((u) => {
 			user = u;
+			isInitializing = false;
 		});
 		return unsubscribe;
 	});
@@ -24,7 +26,7 @@
 {@render children()}
 
 {#if !isInitializing && !user}
-	<div class="flex items-center justify-center min-h-screen bg-slate-950">
+	<div transition:fade={{duration: 200}} class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950">
 		<div class="bg-slate-900 border-2 border-slate-600 rounded-xl p-8 shadow-2xl max-w-md w-full mx-4">
 			<h1 class="text-4xl font-bold text-center mb-2 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
 				Todo App
