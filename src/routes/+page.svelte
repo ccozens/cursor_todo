@@ -51,10 +51,7 @@
   }}
   onUncheckAll={() => todoService.uncheckAll()}
 />
-  {:else}
-    <div class="flex flex-col items-center justify-center p-12 text-slate-500">
-      <p>No todos found. Sign in to create your first list!</p>
-    </div>
+  
 
 <!-- Add Task Form -->
 <section class="m-4 p-4 bg-slate-800 rounded-xl border border-slate-600 max-w-md">
@@ -129,4 +126,9 @@
     </button>
   </form>
 </section>
+
+{:else}
+    <div class="flex flex-col items-center justify-center p-12 text-slate-500">
+      <p>No todos found. Sign in to create your first list!</p>
+    </div>
 {/if}
